@@ -18,14 +18,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 
-Shoes.setup do
-  gem 'mysql'
+require 'sqlite3'
+
+$config_info = {"db" => "tourny.db", "table" => "registration"}
+
+if not FileTest.exists?("#{$config_info["db"]}")
+  dbh = SQLite3::Database.new("#{$config_info["db"]}")
+  dbh.transaction
+  dbh.execute("create table #{$config_info["table"]} (id INTEGER PRIMARY KEY,
+               first TEXT, last TEXT, cnumber TEXT, sex INTEGER)")
+  dbh.commit
 end
-
-require 'yaml'
-require 'mysql'
-
-$config_info = YAML::load("tournymgr.yml")["default"]
 
 class TournyMgr < Shoes
   url '/', :index
@@ -38,24 +41,15 @@ class TournyMgr < Shoes
   url '/review', :review
 
   def submit_registration(first_name, last_name, c_number, sex)
-    begin
-      dbh = Mysql.real_connect($config_info["server"],
-                               $config_info["user"],
-                               $config_info["pass"],
-                               $config_info["db"])
-
-      num_sex = if sex then 1 else 0 end
-      query = "INSERT INTO #{$config_info["table"]} (first, last, cnumber, sex)
+    dbh = SQLite3::Database.new("#{$config_info["db"]}")
+    num_sex = if sex then 1 else 0 end
+    query = "INSERT INTO #{$config_info["table"]} (first, last, cnumber, sex)
                  VALUES
                    (\'#{first_name}\', \'#{last_name}\',
                     \'#{c_number}\', #{num_sex})"
-      dbh.query(query)
-    rescue Mysql::Error => e
-      puts "Error code: #{e.errno}"
-      puts "Error message: #{e.error}"
-    ensure
-      dbh.close if dbh
-    end
+    dbh.transaction
+    dbh.execute(query)
+    dbh.commit
   end
 
   def index
