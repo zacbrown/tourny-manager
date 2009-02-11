@@ -20,7 +20,7 @@
 
 require 'sqlite3'
 
-$config_path = "#{ENV['HOME']}\tourny.db"
+$config_path = "#{ENV['HOME']}/tourny.db"
 $config_info = {"db" => "#{$config_path}", "table" => "registration"}
 
 if not FileTest.exists?("#{$config_info["db"]}")
