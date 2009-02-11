@@ -114,7 +114,7 @@ class TournyMgr < Shoes
       end
     end
     stack :margin_left => 160, :margin => 10, :margin_top => 10 do
-      image "../imgs/pancake.jpg"
+      image "imgs/pancake.jpg"
     end
   end
 
@@ -181,7 +181,7 @@ class TournyMgr < Shoes
       end
     end
     stack :margin_left => 140, :margin => 10, :margin_top => 10 do
-      image "../imgs/mynameismasterchief.jpg"
+      image "imgs/mynameismasterchief.jpg"
     end
   end
 
@@ -237,7 +237,7 @@ class TournyMgr < Shoes
       end
     end
     stack :margin_left => 185, :margin => 10, :margin_top => 0 do
-      image "../imgs/yodawg-lastname.jpg"
+      image "imgs/yodawg-lastname.jpg"
     end
   end
 
@@ -287,7 +287,7 @@ class TournyMgr < Shoes
       end
     end
     stack :margin_left => 130, :margin => 5, :margin_top => 0 do
-      image "../imgs/gates_mug_shot.jpg"
+      image "imgs/gates_mug_shot.jpg"
     end
   end
 
@@ -302,13 +302,13 @@ class TournyMgr < Shoes
     end
     stack :margin_left => 185, :margin => 10, :margin_top => 20 do
       flow do
-        image("../imgs/male.png") do
+        image("imgs/male.png") do
           @male_check = true
           @female_check = false
           @sex_text.text = "You\'re a boy, don't dry hump the girls."
         end
         subtitle " or "
-        image("../imgs/female.png") do
+        image("imgs/female.png") do
           @female_check = true
           @male_check = false
           @sex_text.text = "You\'re a girl, make sure you have pepper spray."
