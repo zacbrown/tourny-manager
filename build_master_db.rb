@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env ruby -rubygems
 # Author: Zac Brown
 # Date:   02.11.2009
 # File:   build_master_db.rb
@@ -21,29 +21,18 @@
 
 require 'rubygems'
 require 'sqlite3'
+require 'mysql'
+require 'yaml'
 
 db_load_dir = ""
-master_db_name = ""
 table_name = "registration"
 
 if ARGV.size > 1
   db_load_dir = ARGV[0]
-  master_db_name = ARGV[1]
+  $master_db_config = YAML::load(File.open(ARGV[1]))["default"]
 else
   puts "ERROR: not enough arguments!"
   exit -1
-end
-
-create = if FileTest.exists?(master_db_name) then false else true end
-
-master_db_h = SQLite3::Database.new(master_db_name)
-if create
-  master_db_h.transaction
-  master_db_h.execute("CREATE TABLE #{table_name}
-                       (num INTEGER PRIMARY KEY, first TEXT, last TEXT,
-                        cnumber TEXT, sex INTEGER, girl INTEGER,
-                        special INTEGER, team INTEGER, kills INTEGER)")
-  master_db_h.commit
 end
 
 Dir.new(db_load_dir).entries.each do |cur_file|
@@ -53,11 +42,25 @@ Dir.new(db_load_dir).entries.each do |cur_file|
   db_h = SQLite3::Database.new(db_load_dir + cur_file)
 
   db_h.execute("SELECT * from #{table_name}") do |row|
-    master_db_h.transaction
-    master_db_h.execute("INSERT INTO registration
-                        (first, last, cnumber, sex, girl, special, team, kills)
-                        VALUES
-                        (?, ?, ?, ?, ?, ? ,?, 0)", *row)
-    master_db_h.commit
+    begin
+      master_db_h = Mysql.real_connect($master_db_config["server"],
+                                       $master_db_config["user"],
+                                       $master_db_config["pass"],
+                                       $master_db_config["db"])
+      row.shift
+
+      query = "INSERT INTO registration
+                 (first, last, cnumber, sex, girl, special, team, kills)
+               VALUES
+                 (\'#{row[0]}\', \'#{row[1]}\', \'#{row[2]}\',
+                    #{row[3..(row.length - 1)].join ", "} 0)"
+
+      master_db_h.query(query)
+    rescue Mysql::Error => e
+      puts "Error code: #{e.errno}"
+      puts "Error message: #{e.error}"
+    ensure
+      master_db_h.close if master_db_h
+    end
   end
 end
