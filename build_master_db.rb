@@ -39,10 +39,10 @@ create = if FileTest.exists?(master_db_name) then false else true end
 master_db_h = SQLite3::Database.new(master_db_name)
 if create
   master_db_h.transaction
-  master_db_h.execute("CREATE TABLE registration
+  master_db_h.execute("CREATE TABLE #{table_name}
                        (num INTEGER PRIMARY KEY, first TEXT, last TEXT,
                         cnumber TEXT, sex INTEGER, girl INTEGER,
-                        special INTEGER, team INTEGER)")
+                        special INTEGER, team INTEGER, kills INTEGER)")
   master_db_h.commit
 end
 
@@ -55,9 +55,9 @@ Dir.new(db_load_dir).entries.each do |cur_file|
   db_h.execute("SELECT * from #{table_name}") do |row|
     master_db_h.transaction
     master_db_h.execute("INSERT INTO registration
-                        (first, last, cnumber, sex, girl, special, team)
+                        (first, last, cnumber, sex, girl, special, team, kills)
                         VALUES
-                        (?, ?, ?, ?, ?, ? ,?)", *row)
+                        (?, ?, ?, ?, ?, ? ,?, 0)", *row)
     master_db_h.commit
   end
 end
