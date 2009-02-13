@@ -43,7 +43,8 @@ begin
   # get everyone thats not eliminated yet
   query = "SELECT id, first, last, kills, deaths, medals, eliminated
            FROM registration
-           WHERE eliminated = 0 ORDER BY kills DESC, deaths, medals DESC"
+           WHERE eliminated = 0 AND has_played = 1
+           ORDER BY kills DESC, deaths, medals DESC"
   results = master_db_h.query(query)
 
   count = results.num_rows / 2

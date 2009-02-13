@@ -11,12 +11,16 @@
         %th Name
         %th C-Number
         %th Kills
+        %th Deaths
+        %th Medals
 
       - @players.each do |player|
         %tr{:class=>"player"}
           %td= "#{player[:first]} #{player[:last]}"
           %td= "#{player[:cnumber]}"
           %td= "#{player[:kills]}"
+          %td= "#{player[:deaths]}"
+          %td= "#{player[:medals]}"
 
 %script{:type => "text/javascript"}
   :plain

@@ -50,10 +50,9 @@ Dir.new(db_load_dir).entries.each do |cur_file|
       row.shift
 
       query = "INSERT INTO registration
-                 (first, last, cnumber, sex, girl, special, team, kills)
+                 (first, last, cnumber, sex)
                VALUES
-                 (\'#{row[0]}\', \'#{row[1]}\', \'#{row[2]}\',
-                    #{row[3..(row.length - 1)].join ", "} 0)"
+                 (\'#{row[0]}\', \'#{row[1]}\', \'#{row[2]}\', #{row[3]})"
 
       master_db_h.query(query)
     rescue Mysql::Error => e

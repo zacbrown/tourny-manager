@@ -80,8 +80,10 @@ end
 
 helpers do
   def highscore
-    $my_db["SELECT first, last, cnumber, kills FROM registration
-            ORDER BY kills DESC LIMIT 10"]
+    $my_db["SELECT first, last, cnumber, kills, deaths, medals
+            FROM registration
+            ORDER BY kills DESC, deaths, medals DESC
+            LIMIT 20"]
   end
 
   def cur_heat
