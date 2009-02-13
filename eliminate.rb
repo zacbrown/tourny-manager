@@ -48,13 +48,11 @@ begin
   count = results.num_rows / 2
 
   i = 0
-  puts "thar..."
   results.each do |result|
-    puts "here... #{count}"
     if i >= count
       master_db_h.query("UPDATE registration SET eliminated = 1
                          WHERE id=\'#{result[0]}\'")
-      puts "eliminated: #{result[1]} #{result[2]}"
+      puts "eliminated: #{result[1]} #{result[]}"
     end
     i += 1
   end
