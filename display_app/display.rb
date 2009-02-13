@@ -25,8 +25,20 @@ require 'sinatra'
 
 db_config = YAML::load(File.open('config.yml'))["default"]
 
+$tourny_config = YAML::load(File.open('tournyconf.yml'))["default"]
+
 $my_db = Sequel.mysql(db_config["db"], :user => db_config["user"],
                   :password => db_config["pass"], :host => db_config["server"])
+
+class Array
+  def shuffle
+    sort_by { rand }
+  end
+
+  def shuffle!
+    self.replace shuffle
+  end
+end
 
 get '/' do
 
@@ -42,9 +54,38 @@ get '/highscores' do
   haml :highscores
 end
 
+get '/current' do
+  full_player_list = cur_heat.all.collect
+  full_player_list.shuffle!
+  count = 0
+  i = 0
+  @groups = []
+  full_player_list.each do |player|
+    @groups[count] = []
+    if i == 4 then i = 0; count += 1 end
+    i += 1
+  end
+  count = 0
+  i = 0
+  full_player_list.each do |player|
+    if i == 4 then i = 0; count += 1 end
+    @groups[count][i] =
+      "#{player[:first]} #{player[:last]} - #{player[:cnumber][-4,4]}"
+    i += 1
+  end
+  @groups.compact
+  haml :current
+end
+
 helpers do
   def highscore
     $my_db["SELECT first, last, cnumber, kills FROM registration
             ORDER BY kills DESC LIMIT 10"]
+  end
+
+  def cur_heat
+    $my_db["SELECT first, last, cnumber FROM registration
+            WHERE eliminated = 0 AND has_played = 0
+            LIMIT #{$tourny_config["per_heat"]}"]
   end
 end

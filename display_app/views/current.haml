@@ -1,0 +1,15 @@
+!!!
+%html
+  %head
+    %link{:rel => "stylesheet", :type => "text/css", :href => "/style.css"}
+    %title= "Current Heat"
+
+  %body
+    %h1== &nbsp;&nbsp;&nbsp;&nbsp;Current Heat
+    %pre= "format: {name} - {last 4 digits of c-number}"
+    - count = 1
+    - @groups.each do |group|
+      %pre= "XBox #{count}"
+      - group.each do |player|
+        %pre= "&nbsp;&nbsp;&nbsp;&nbsp;* #{player}"
+      - count += 1
