@@ -41,8 +41,9 @@ begin
                                    $master_db_config["db"])
 
   # get everyone thats not eliminated yet
-  query = "SELECT id, first, last, kills, eliminated FROM registration
-           WHERE eliminated = 0 ORDER BY kills DESC"
+  query = "SELECT id, first, last, kills, deaths, medals, eliminated
+           FROM registration
+           WHERE eliminated = 0 ORDER BY kills DESC, deaths, medals DESC"
   results = master_db_h.query(query)
 
   count = results.num_rows / 2
@@ -52,7 +53,7 @@ begin
     if i >= count
       master_db_h.query("UPDATE registration SET eliminated = 1
                          WHERE id=\'#{result[0]}\'")
-      puts "eliminated: #{result[1]} #{result[]}"
+      puts "eliminated: #{result[1]} #{result[2]}"
     end
     i += 1
   end
