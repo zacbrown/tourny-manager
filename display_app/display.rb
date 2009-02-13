@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby -rubygems
 # Author: Zac Brown
 # Date:   02.07.2009
 # File:   display.rb
