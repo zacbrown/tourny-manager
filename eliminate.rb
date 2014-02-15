@@ -47,8 +47,9 @@ begin
            ORDER BY kills DESC, deaths, medals DESC"
   results = master_db_h.query(query)
 
-  count = results.num_rows / 2
-
+  count = 16
+  puts "total: " << count
+#  puts "results class: " << results.class
   i = 0
   results.each do |result|
     if i >= count

@@ -1,0 +1,7 @@
+---
+default:
+  user: xxxxxxxx
+  pass: xxxxxxxx
+  server: 123.456.789.0
+  db: tourny
+  table: registration3
